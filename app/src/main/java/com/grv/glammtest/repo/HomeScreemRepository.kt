@@ -2,25 +2,30 @@ package com.grv.gauravtest.repo
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.grv.gauravtest.model.RestaurantModel
+import com.grv.gauravtest.model.IRestaurantModel
 import com.grv.glammtest.database.RestaurantEntity
 import com.grv.glammtest.network.response.ApiResponse
 import com.grv.glammtest.network.response.geolocation.GeoLocationResponse
+import com.grv.glammtest.toothpick.RepoScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import toothpick.Toothpick
+import javax.inject.Inject
 
-class HomeScreemRepository : BaseRepository() {
+class HomeScreemRepository @Inject constructor() : BaseRepository() {
 
-    private var restaurantodel: RestaurantModel? = null
+    @Inject
+    lateinit var restaurantodel: IRestaurantModel
     val TAG="HomeScreemRepository"
 
     init {
-        restaurantodel= RestaurantModel()
+        Toothpick.inject(this,RepoScope.scope)
+
     }
-    fun getRestorantByGEO(
+   override fun getRestorantByGEO(
         latitude: String,
         longitude: String,callBack:(ApiResponse<GeoLocationResponse>) ->Unit
 
@@ -53,7 +58,7 @@ class HomeScreemRepository : BaseRepository() {
         return mutableGeoLiveData
     }
 
-    fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>) {
+   override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>) {
         GlobalScope.async {
             restaurantodel?.retriveRestaurantList { nullableList ->
             mutableRestaurantList.postValue(nullableList)
@@ -62,7 +67,7 @@ class HomeScreemRepository : BaseRepository() {
         }
     }
 
-    fun insertRestaurant(restaurantList: MutableList<RestaurantEntity>) {
+   override fun insertRestaurant(restaurantList: MutableList<RestaurantEntity>) {
       GlobalScope.async {
           restaurantodel?.addRestaurant(restaurantList){
               if (it){
@@ -75,5 +80,7 @@ class HomeScreemRepository : BaseRepository() {
       }
 
     }
+
+
 
 }

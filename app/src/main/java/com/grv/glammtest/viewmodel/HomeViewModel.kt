@@ -3,60 +3,55 @@ package com.grv.gauravtest.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.grv.gauravtest.repo.BaseRepository
 import com.grv.gauravtest.repo.HomeScreemRepository
 import com.grv.gauravtest.utils.NetworkConstant
 import com.grv.glammtest.database.RestaurantEntity
 import com.grv.glammtest.network.response.ApiResponse
 import com.grv.glammtest.network.response.geolocation.GeoLocationResponse
+import com.grv.glammtest.toothpick.RepoScope
+import com.grv.glammtest.toothpick.ViewModelScope
 import kotlinx.coroutines.*
+import toothpick.Toothpick
+import javax.inject.Inject
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val TAG = "HomeViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private var mutableGeoLiveData: MediatorLiveData<ApiResponse<GeoLocationResponse>> =
-        MediatorLiveData()
-
-    var repository: HomeScreemRepository
+    @Inject
+   lateinit var repository: HomeScreemRepository
 
     private var mutableRestaurantList: MutableLiveData<List<RestaurantEntity>> = MutableLiveData()
 
 
    init {
-       repository = HomeScreemRepository()
+       Toothpick.inject(this, ViewModelScope.scope)
+
        Log.e(TAG, "init called")
 
-       loadRestorantByGEOLocation(
-           NetworkConstant.lattitude,
-           NetworkConstant.longitude
-       ) // load restaurant from server
+        repository.getRestorantByGEO( NetworkConstant.lattitude,
+           NetworkConstant.longitude){ apiResponse ->
+           Log.e(TAG,"callback works")
+           getHotels(apiResponse)
+       }
+
 
        repository.getLocalRestaurant(mutableRestaurantList) // load from local database
    }
 
 
-
-
-    private fun loadRestorantByGEOLocation(latitude: String, longitude: String) {
-
-
-
-        repository.getRestorantByGEO(latitude,longitude){ apiResponse ->
-            Log.e(TAG,"callback works")
-            getHotels(apiResponse)
-        }
-
-    }
-
     fun getRestaurantList():LiveData<List<RestaurantEntity>>{
         return mutableRestaurantList
     }
     private fun getHotels(apiResponse: ApiResponse<GeoLocationResponse>) {
-
+        if (apiResponse.posts==null)
+            return
         uiScope. launch {
             var restaurantList = mutableListOf<RestaurantEntity>();
-            for (nearby in apiResponse.posts.nearbyRestaurants) {
+
+            for (nearby in apiResponse?.posts.nearbyRestaurants) {
 
                 var restaurant = nearby.restaurant.location.address?.let {
                     RestaurantEntity(id = nearby.restaurant.id, name = nearby.restaurant.name, thumb = nearby.restaurant.thumb, address = it)

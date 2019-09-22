@@ -6,9 +6,10 @@ import com.grv.glammtest.database.RestaurantEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withTimeout
+import javax.inject.Inject
 
 
-class RestaurantModel : IRestaurantModel,BaseModel() {
+class RestaurantModel @Inject constructor() : IRestaurantModel,BaseModel() {
    val getDatabaseClient= RestaurantDatabase.getDatabase(RestaurantApplication.instance)
 
 
