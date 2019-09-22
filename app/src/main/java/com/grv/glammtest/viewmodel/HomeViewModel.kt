@@ -17,7 +17,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private var mutableGeoLiveData: MediatorLiveData<ApiResponse<GeoLocationResponse>> =
         MediatorLiveData()
-    var _livedata: LiveData<ApiResponse<GeoLocationResponse>>
 
     var repository: HomeScreemRepository
 
@@ -25,7 +24,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 
    init {
-       _livedata = mutableGeoLiveData
        repository = HomeScreemRepository()
        Log.e(TAG, "init called")
 
@@ -33,7 +31,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
            NetworkConstant.lattitude,
            NetworkConstant.longitude
        ) // load restaurant from server
-       repository.getLocalRestaurant(mutableRestaurantList)
+
+       repository.getLocalRestaurant(mutableRestaurantList) // load from local database
    }
 
 
@@ -42,19 +41,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun loadRestorantByGEOLocation(latitude: String, longitude: String) {
 
 
-        mutableGeoLiveData.addSource(repository.getRestorantByGEO(
-            latitude,
-            longitude
 
-        )
-
-        ) { apiResponse ->
-
+        repository.getRestorantByGEO(latitude,longitude){ apiResponse ->
+            Log.e(TAG,"callback works")
             getHotels(apiResponse)
         }
 
     }
 
+  //  fun getRestaurantList():LiveData<List>
     private fun getHotels(apiResponse: ApiResponse<GeoLocationResponse>) {
 
         uiScope. launch {

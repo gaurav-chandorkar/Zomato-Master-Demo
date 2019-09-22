@@ -22,7 +22,7 @@ class HomeScreemRepository : BaseRepository() {
     }
     fun getRestorantByGEO(
         latitude: String,
-        longitude: String
+        longitude: String,callBack:(ApiResponse<GeoLocationResponse>) ->Unit
 
 
     ): MutableLiveData<ApiResponse<GeoLocationResponse>> {
@@ -32,15 +32,19 @@ class HomeScreemRepository : BaseRepository() {
         call.enqueue(object : Callback<GeoLocationResponse> {
             override fun onFailure(call: Call<GeoLocationResponse>, t: Throwable) {
                 mutableGeoLiveData.postValue(ApiResponse(t))
+                callBack.invoke(ApiResponse(t))
+
             }
 
             override fun onResponse(
                 call: Call<GeoLocationResponse>,
                 response: Response<GeoLocationResponse>
+
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         mutableGeoLiveData.postValue(ApiResponse(it))
+                        callBack.invoke(ApiResponse(it))
                     }
                 }
             }

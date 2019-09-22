@@ -28,7 +28,7 @@ class HomeScreenActivity : AppCompatActivity() {
         observeLiveData()
     }
     private fun observeLiveData() {
-        homeViewoMdel._livedata.observe(this@HomeScreenActivity,
+        /*homeViewoMdel._livedata.observe(this@HomeScreenActivity,
             object : Observer<ApiResponse<GeoLocationResponse>> {
                 override fun onChanged(response: ApiResponse<GeoLocationResponse>) {
 
@@ -43,7 +43,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     }
                 }
 
-            })
+            })*/
     }
 
 }
