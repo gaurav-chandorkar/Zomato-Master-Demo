@@ -1,11 +1,14 @@
 package com.grv.gauravtest.model
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withTimeout
 import java.lang.Exception
 const val TIMEOUT_DURATION_MILLIS = 3000L
 
 open class BaseModel {
 
-     /*suspend fun performOperationWithTimeOut(function: () -> Unit, callback: SuccessCallback) {
+     suspend fun performOperationWithTimeOut(function: () -> Unit, callback: SuccessCallback) {
           var job= GlobalScope.async {
 
         try {
@@ -19,6 +22,6 @@ open class BaseModel {
     }
          job.await()
          callback.invoke(true)
-    }*/
+    }
 
 }

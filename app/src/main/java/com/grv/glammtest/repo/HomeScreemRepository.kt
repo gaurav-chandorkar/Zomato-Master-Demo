@@ -57,10 +57,23 @@ class HomeScreemRepository : BaseRepository() {
         GlobalScope.async {
             restaurantodel?.retriveRestaurantList { nullableList ->
             mutableRestaurantList.postValue(nullableList)
-            Log.e(TAG, "restaurant list")
+            Log.e(TAG, "restaurant list ${nullableList?.size}")
             }
-
         }
+    }
+
+    fun insertRestaurant(restaurantList: MutableList<RestaurantEntity>) {
+      GlobalScope.async {
+          restaurantodel?.addRestaurant(restaurantList){
+              if (it){
+                  Log.e(TAG,"Restaurant inserted")
+              }else
+                  Log.e(TAG,"Restaurant insert Failed")
+
+          }
+
+      }
+
     }
 
 }

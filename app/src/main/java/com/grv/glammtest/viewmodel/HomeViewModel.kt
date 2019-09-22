@@ -20,7 +20,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     var repository: HomeScreemRepository
 
-    var mutableRestaurantList: MutableLiveData<List<RestaurantEntity>> = MutableLiveData()
+    private var mutableRestaurantList: MutableLiveData<List<RestaurantEntity>> = MutableLiveData()
 
 
    init {
@@ -49,7 +49,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-  //  fun getRestaurantList():LiveData<List>
+    fun getRestaurantList():LiveData<List<RestaurantEntity>>{
+        return mutableRestaurantList
+    }
     private fun getHotels(apiResponse: ApiResponse<GeoLocationResponse>) {
 
         uiScope. launch {
@@ -71,6 +73,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e(TAG, "it works.......!!!!")
 
             }
+            repository.insertRestaurant(restaurantList)
         }
 
     }

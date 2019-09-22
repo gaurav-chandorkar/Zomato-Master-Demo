@@ -5,12 +5,12 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -38,46 +38,54 @@ class MainActivity : AppCompatActivity() {
                 this, android.Manifest.permission
                     .ACCESS_FINE_LOCATION
             )
-        )
+        ) {
             ActivityCompat.requestPermissions(
                 this, arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION
                 ), REQUEST_CODE
             )
-        else {
+        } else {
             buildLocationRequest()
             createLocationDialog()
             buildLocationCallback()
         }
 
+    }
+
+    private fun goToNext() {
         Handler().postDelayed(object : Runnable {
             override fun run() {
                 if (isLocationSet)
-                    gotoNext()
+                    callHomeScreen()
                 else {
                     Toast.makeText(this@MainActivity, " Location required", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
-        }, 5000)
+        }, 2000)
     }
 
-    private fun gotoNext(){
+    private fun callHomeScreen() {
         startActivity(Intent(this@MainActivity, HomeScreenActivity::class.java))
         finish()
     }
+
     private fun buildLocationCallback() {
 
         locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(locationResult: LocationResult?) {
                 location = locationResult!!.locations.get(locationResult!!.locations.size - 1)
-                Log.e("lattitude", location.latitude.toString() + "  " + location.longitude.toString())
+                Log.e(
+                    "lattitude",
+                    location.latitude.toString() + "  " + location.longitude.toString()
+                )
 
                 NetworkConstant.lattitude = location.latitude.toString()
                 NetworkConstant.longitude = location.longitude.toString()
                 if (!isLocationSet) {
                     isLocationSet = true
+                    callHomeScreen()
                 }
 
             }
@@ -94,7 +102,6 @@ class MainActivity : AppCompatActivity() {
             REQUEST_CODE -> {
                 if (grantResults.size > 0) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-
                     else
                         Toast.makeText(
                             this@MainActivity,
@@ -160,6 +167,7 @@ class MainActivity : AppCompatActivity() {
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
+
     private fun startLocationUpdate() {
         //Create FusedProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)

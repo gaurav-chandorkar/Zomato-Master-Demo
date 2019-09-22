@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.grv.gauravtest.app.RestaurantApplication
 import com.grv.gauravtest.viewmodel.HomeViewModel
 import com.grv.gauravtest.viewmodel.factory.HomeViewModelFactory
+import com.grv.glammtest.database.RestaurantEntity
 import com.grv.glammtest.network.response.ApiResponse
 import com.grv.glammtest.network.response.geolocation.GeoLocationResponse
 
@@ -28,9 +29,9 @@ class HomeScreenActivity : AppCompatActivity() {
         observeLiveData()
     }
     private fun observeLiveData() {
-        /*homeViewoMdel._livedata.observe(this@HomeScreenActivity,
-            object : Observer<ApiResponse<GeoLocationResponse>> {
-                override fun onChanged(response: ApiResponse<GeoLocationResponse>) {
+        homeViewoMdel.getRestaurantList().observe(this@HomeScreenActivity,
+            object : Observer<List<RestaurantEntity>> {
+                override fun onChanged(response: List<RestaurantEntity>) {
 
                     Log.e(TAG,"got response")
 
@@ -38,12 +39,12 @@ class HomeScreenActivity : AppCompatActivity() {
                         return
                     }
 
-                    if (response.error == null) {
-                        Log.e(TAG,"got response2")
+                    if (response.size >0) {
+                        Log.e(TAG,"got filtered list ${response.size}")
                     }
                 }
 
-            })*/
+            })
     }
 
 }
