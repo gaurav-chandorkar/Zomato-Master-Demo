@@ -6,6 +6,8 @@ import com.grv.gauravtest.model.RestaurantModel
 import com.grv.glammtest.database.RestaurantEntity
 import com.grv.glammtest.network.response.ApiResponse
 import com.grv.glammtest.network.response.geolocation.GeoLocationResponse
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,13 +50,13 @@ class HomeScreemRepository : BaseRepository() {
     }
 
     fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>) {
-        /*GlobalScope.async {
+        GlobalScope.async {
             restaurantodel?.retriveRestaurantList { nullableList ->
             mutableRestaurantList.postValue(nullableList)
             Log.e(TAG, "restaurant list")
             }
 
-        }*/
+        }
     }
 
 }

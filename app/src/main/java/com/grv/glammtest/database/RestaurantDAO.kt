@@ -14,7 +14,7 @@ interface RestaurantDAO {
     fun addRestaurant( list: MutableList<RestaurantEntity>)
 
    @Query("SELECT * FROM restaurantentity")
-   fun getAll(): List<RestaurantEntity>
+   fun getAll(): MutableList<RestaurantEntity>
 
 
    /* @Query("SELECT * FROM user")
