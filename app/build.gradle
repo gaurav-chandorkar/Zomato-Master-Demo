@@ -34,4 +34,12 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.5.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+
+    // interceptor for api req & response
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
 }
