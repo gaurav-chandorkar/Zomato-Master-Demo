@@ -19,7 +19,7 @@ abstract class BaseRepository : BaseClient() {
     abstract fun getRestorantByGEO(
         atitude: String,
         longitude: String, callBack: (ApiResponse<GeoLocationResponse>) -> Unit
-    ): MutableLiveData<ApiResponse<GeoLocationResponse>>
+    )
 
     abstract fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>)
 

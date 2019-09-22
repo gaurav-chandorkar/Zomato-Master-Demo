@@ -8,11 +8,10 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.grv.glammtest.database.RestaurantEntity
 
-@Database(entities = [RestaurantEntity::class], version = 2)
+@Database(entities = [RestaurantEntity::class], version = 1)
 abstract class RestaurantDatabase : RoomDatabase() {
-    abstract fun wordDao(): RestaurantDAO
+    abstract fun restDao(): RestaurantDAO
 
-    //abstract fun userDao(): UserDao
 
     companion object {
 
@@ -20,7 +19,6 @@ abstract class RestaurantDatabase : RoomDatabase() {
         private var INSTANCE: RestaurantDatabase? = null
 
         fun getDatabase(context: Context): RestaurantDatabase? {
-            Log.e("RestaurantDatabase grv", "Opened")
 
             if (INSTANCE == null) {
                 synchronized(RestaurantDatabase::class.java) {
@@ -28,7 +26,7 @@ abstract class RestaurantDatabase : RoomDatabase() {
                         // Create database here
                         INSTANCE = Room.databaseBuilder(
                             context.applicationContext,
-                            RestaurantDatabase::class.java, "word_database"
+                            RestaurantDatabase::class.java, "rest_database"
                         )
                             .addCallback(sRoomDatabaseCallback).build()
                     }

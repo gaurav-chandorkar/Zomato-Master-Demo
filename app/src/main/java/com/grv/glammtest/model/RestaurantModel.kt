@@ -18,7 +18,7 @@ class RestaurantModel @Inject constructor() : IRestaurantModel,BaseModel() {
        callback: SuccessCallback
     ) {
 
-        performOperationWithTimeOut({getDatabaseClient?.wordDao()?.addRestaurant(restaurantList)},{result ->
+        performOperationWithTimeOut({getDatabaseClient?.restDao()?.addRestaurant(restaurantList)},{ result ->
             callback.invoke(result)
         })
 
@@ -27,7 +27,7 @@ class RestaurantModel @Inject constructor() : IRestaurantModel,BaseModel() {
   public  override suspend fun retriveRestaurantList(callback: (MutableList<RestaurantEntity>?) -> Unit) {
         val job= GlobalScope.async {
             withTimeout(TIMEOUT_DURATION_MILLIS){
-                getDatabaseClient?.wordDao()?.getAll()
+                getDatabaseClient?.restDao()?.getAll()
             }
         }
         callback.invoke(job.await())

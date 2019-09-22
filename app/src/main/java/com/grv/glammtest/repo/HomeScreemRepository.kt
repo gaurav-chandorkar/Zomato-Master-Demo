@@ -23,20 +23,18 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
 
     init {
         Toothpick.inject(this,RepoScope.scope)
-
     }
    override fun getRestorantByGEO(
         latitude: String,
         longitude: String,callBack:(ApiResponse<GeoLocationResponse>) ->Unit
 
 
-    ): MutableLiveData<ApiResponse<GeoLocationResponse>> {
-        var mutableGeoLiveData = MutableLiveData<ApiResponse<GeoLocationResponse>>()
+    ){
+       // var mutableGeoLiveData = MutableLiveData<ApiResponse<GeoLocationResponse>>()
         var call = getAPIClient().getRestorantByGEO(latitude, longitude)
 
         call.enqueue(object : Callback<GeoLocationResponse> {
             override fun onFailure(call: Call<GeoLocationResponse>, t: Throwable) {
-                mutableGeoLiveData.postValue(ApiResponse(t))
                 callBack.invoke(ApiResponse(t))
 
             }
@@ -48,14 +46,12 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        mutableGeoLiveData.postValue(ApiResponse(it))
                         callBack.invoke(ApiResponse(it))
                     }
                 }
             }
 
         })
-        return mutableGeoLiveData
     }
 
    override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>) {
