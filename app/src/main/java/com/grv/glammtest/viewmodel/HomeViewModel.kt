@@ -23,7 +23,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
    lateinit var repository: HomeScreemRepository
 
-    private var mutableRestaurantList: MutableLiveData<List<RestaurantEntity>> = MutableLiveData()
+    private var mutableRestaurantList: MutableLiveData<MutableList<RestaurantEntity>> = MutableLiveData()
 
 
    init {
@@ -34,7 +34,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         repository.getRestorantByGEO( NetworkConstant.lattitude,
            NetworkConstant.longitude){ apiResponse ->
            Log.e(TAG,"callback works")
-           getHotels(apiResponse)
+           getHotels(apiResponse)               // load from Server
        }
 
 
@@ -42,16 +42,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
    }
 
 
-    fun getRestaurantList():LiveData<List<RestaurantEntity>>{
+    fun getRestaurantList():LiveData<MutableList<RestaurantEntity>>{
         return mutableRestaurantList
     }
+
     private fun getHotels(apiResponse: ApiResponse<GeoLocationResponse>) {
         if (apiResponse.posts==null)
             return
         uiScope. launch {
             var restaurantList = mutableListOf<RestaurantEntity>();
 
-            for (nearby in apiResponse?.posts.nearbyRestaurants) {
+            for (nearby in apiResponse.posts.nearbyRestaurants) {
 
                 var restaurant = nearby.restaurant.location.address?.let {
                     RestaurantEntity(id = nearby.restaurant.id, name = nearby.restaurant.name, thumb = nearby.restaurant.thumb, address = it)

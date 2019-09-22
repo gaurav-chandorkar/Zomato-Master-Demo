@@ -54,7 +54,7 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
         })
     }
 
-   override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<List<RestaurantEntity>>) {
+   override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<MutableList<RestaurantEntity>>) {
         GlobalScope.async {
             restaurantodel?.retriveRestaurantList { nullableList ->
             mutableRestaurantList.postValue(nullableList)

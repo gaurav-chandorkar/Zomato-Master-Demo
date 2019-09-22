@@ -1,50 +1,67 @@
 package com.grv.glammtest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.grv.gauravtest.app.RestaurantApplication
 import com.grv.gauravtest.viewmodel.HomeViewModel
 import com.grv.gauravtest.viewmodel.factory.HomeViewModelFactory
 import com.grv.glammtest.database.RestaurantEntity
-import com.grv.glammtest.network.response.ApiResponse
-import com.grv.glammtest.network.response.geolocation.GeoLocationResponse
+import com.grv.glammtest.view.HomeScreenView
 
-class HomeScreenActivity : AppCompatActivity() {
+class HomeScreenActivity : AppCompatActivity(),TouchActionDelegates {
 
 
     lateinit var viewmodelProvideFactory: HomeViewModelFactory
     val TAG = "HomeScreenActivity"
     lateinit var homeViewoMdel: HomeViewModel
+
+    lateinit var contentView: HomeScreenView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_screen)
+        // setContentView(R.layout.activity_home_screen)
         viewmodelProvideFactory = HomeViewModelFactory(application as RestaurantApplication)
         Log.e(TAG, "oncreate")
         homeViewoMdel = ViewModelProviders.of(this@HomeScreenActivity, viewmodelProvideFactory)
             .get(HomeViewModel::class.java)
         observeLiveData()
+        contentView =
+            LayoutInflater.from(this).inflate(R.layout.activity_home_screen, null) as HomeScreenView
+
+
+        setContentView(contentView)
+        contentView.initView(this@HomeScreenActivity)
+
     }
+
+
     private fun observeLiveData() {
         homeViewoMdel.getRestaurantList().observe(this@HomeScreenActivity,
-            object : Observer<List<RestaurantEntity>> {
-                override fun onChanged(response: List<RestaurantEntity>) {
-
-                    Log.e(TAG,"got response")
-
+            object : Observer<MutableList<RestaurantEntity>> {
+                override fun onChanged(response: MutableList<RestaurantEntity>) {
+                    contentView.closeProgress()
                     if (response == null) {
                         return
                     }
 
-                    if (response.size >0) {
-                        Log.e(TAG,"got filtered list ${response.size}")
+                    if (response.size > 0) {
+                        Log.e(TAG, "got filtered list ${response.size}")
+                        contentView.updateList(response)
                     }
                 }
 
             })
     }
 
+    override fun onItemClick(value: String) {
+        Log.e(TAG,"onItemClick")
+    }
+}
+
+
+interface TouchActionDelegates {
+    fun onItemClick(value: String)
 }
