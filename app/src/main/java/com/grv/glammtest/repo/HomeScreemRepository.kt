@@ -19,18 +19,19 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
 
     @Inject
     lateinit var restaurantodel: IRestaurantModel
-    val TAG="HomeScreemRepository"
+    val TAG = "HomeScreemRepository"
 
     init {
-        Toothpick.inject(this,RepoScope.scope)
+        Toothpick.inject(this, RepoScope.scope)
     }
-   override fun getRestorantByGEO(
+
+    override fun getRestorantByGEO(
         latitude: String,
-        longitude: String,callBack:(ApiResponse<GeoLocationResponse>) ->Unit
+        longitude: String, callBack: (ApiResponse<GeoLocationResponse>) -> Unit
 
 
-    ){
-       // var mutableGeoLiveData = MutableLiveData<ApiResponse<GeoLocationResponse>>()
+    ) {
+        // var mutableGeoLiveData = MutableLiveData<ApiResponse<GeoLocationResponse>>()
         var call = getAPIClient().getRestorantByGEO(latitude, longitude)
 
         call.enqueue(object : Callback<GeoLocationResponse> {
@@ -54,29 +55,32 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
         })
     }
 
-   override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<MutableList<RestaurantEntity>>) {
+    override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<MutableList<RestaurantEntity>>) {
         GlobalScope.async {
             restaurantodel?.retriveRestaurantList { nullableList ->
-            mutableRestaurantList.postValue(nullableList)
-            Log.e(TAG, "restaurant list ${nullableList?.size}")
+                mutableRestaurantList.postValue(nullableList)
+                Log.e(TAG, "restaurant list ${nullableList?.size}")
             }
         }
     }
 
-   override fun insertRestaurant(restaurantList: MutableList<RestaurantEntity>) {
-      GlobalScope.async {
-          restaurantodel?.addRestaurant(restaurantList){
-              if (it){
-                  Log.e(TAG,"Restaurant inserted")
-              }else
-                  Log.e(TAG,"Restaurant insert Failed")
+    override fun insertRestaurant(restaurantList: MutableList<RestaurantEntity>) {
+        GlobalScope.async {
 
-          }
+            restaurantodel.deleteAll {
+                Log.e(TAG, "All Restaurant Deleted")
+            }
+            restaurantodel.addRestaurant(restaurantList) {
+                if (it) {
+                    Log.e(TAG, "Restaurant inserted")
+                } else
+                    Log.e(TAG, "Restaurant insert Failed")
 
-      }
+            }
+
+        }
 
     }
-
 
 
 }

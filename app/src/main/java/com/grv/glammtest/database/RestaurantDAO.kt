@@ -16,7 +16,9 @@ interface RestaurantDAO {
    @Query("SELECT * FROM restaurantentity")
    fun getAll(): MutableList<RestaurantEntity>
 
+    @Query("DELETE FROM restaurantentity")
+    fun deleteAllRestaurant()
 
-   /* @Query("SELECT * FROM user")
+    /* @Query("SELECT * FROM user")
     fun getAllU(): List<User>*/
 }

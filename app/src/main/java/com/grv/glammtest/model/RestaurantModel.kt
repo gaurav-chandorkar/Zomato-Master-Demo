@@ -9,24 +9,32 @@ import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 
-class RestaurantModel @Inject constructor() : IRestaurantModel,BaseModel() {
-   val getDatabaseClient= RestaurantDatabase.getDatabase(RestaurantApplication.instance)
+class RestaurantModel @Inject constructor() : IRestaurantModel, BaseModel() {
 
+
+    val getDatabaseClient = RestaurantDatabase.getDatabase(RestaurantApplication.instance)
+
+    override suspend fun deleteAll(callback: SuccessCallback) {
+        performOperationWithTimeOut({ getDatabaseClient?.restDao()?.deleteAllRestaurant() }) {result ->
+            callback.invoke(result)
+        }
+    }
 
     override suspend fun addRestaurant(
-       restaurantList: MutableList<RestaurantEntity>,
-       callback: SuccessCallback
+        restaurantList: MutableList<RestaurantEntity>,
+        callback: SuccessCallback
     ) {
 
-        performOperationWithTimeOut({getDatabaseClient?.restDao()?.addRestaurant(restaurantList)},{ result ->
+        performOperationWithTimeOut({ getDatabaseClient?.restDao()?.addRestaurant(restaurantList) })
+        { result ->
             callback.invoke(result)
-        })
+        }
 
     }
 
-  public  override suspend fun retriveRestaurantList(callback: (MutableList<RestaurantEntity>?) -> Unit) {
-        val job= GlobalScope.async {
-            withTimeout(TIMEOUT_DURATION_MILLIS){
+    public override suspend fun retriveRestaurantList(callback: (MutableList<RestaurantEntity>?) -> Unit) {
+        val job = GlobalScope.async {
+            withTimeout(TIMEOUT_DURATION_MILLIS) {
                 getDatabaseClient?.restDao()?.getAll()
             }
         }
