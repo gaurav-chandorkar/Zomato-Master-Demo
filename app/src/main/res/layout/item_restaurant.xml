@@ -10,7 +10,9 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <TextView
         android:id="@+id/tv_hotel_name"
@@ -39,9 +41,5 @@
         app:layout_constraintStart_toEndOf="@+id/img_thumb"
         app:layout_constraintTop_toBottomOf="@+id/tv_hotel_name" />
 
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address"
-        android:visibility="gone"/>
+
 </com.grv.glammtest.view.RestaurantItemView>
