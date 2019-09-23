@@ -1,6 +1,5 @@
 package com.grv.glammtest.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.grv.glammtest.R
 import com.grv.glammtest.TouchActionDelegates
 import com.grv.glammtest.database.RestaurantEntity
 import kotlinx.android.synthetic.main.item_restaurant.view.*
-import java.net.URI
 import java.net.URL
 
 class RestaurantAdapter(
@@ -41,6 +39,7 @@ class RestaurantAdapter(
         }
     }
 
+
     fun updateList(list: List<RestaurantEntity>) {
         restaurantList.clear()
         restaurantList.addAll(list)
@@ -51,13 +50,17 @@ class RestaurantAdapter(
         val requestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
 
         fun setData(position: Int) {
-            var restaurant = restaurantList.get(position)
+            var restaurant = restaurantList[position]
             view.img_thumb
             view.tv_hotel_name.text = restaurant.name
             view.tv_address.text = restaurant.address
 
-            Log.e(TAG, "url ${restaurant.thumb}")
+            //  Log.e(TAG, "url ${restaurant.thumb}")
             Glide.with(view).load(URL(restaurant.thumb)).apply(requestOptions).into(view.img_thumb)
+
+            view.setOnClickListener {
+                touchActionDelegate.onItemClick(" Clicked: ${restaurant.name}")
+            }
         }
     }
 

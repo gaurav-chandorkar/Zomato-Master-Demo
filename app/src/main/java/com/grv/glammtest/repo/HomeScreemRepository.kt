@@ -31,7 +31,6 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
 
 
     ) {
-        // var mutableGeoLiveData = MutableLiveData<ApiResponse<GeoLocationResponse>>()
         var call = getAPIClient().getRestorantByGEO(latitude, longitude)
 
         call.enqueue(object : Callback<GeoLocationResponse> {
@@ -57,7 +56,7 @@ class HomeScreemRepository @Inject constructor() : BaseRepository() {
 
     override fun getLocalRestaurant(mutableRestaurantList: MutableLiveData<MutableList<RestaurantEntity>>) {
         GlobalScope.async {
-            restaurantodel?.retriveRestaurantList { nullableList ->
+            restaurantodel.retriveRestaurantList { nullableList ->
                 mutableRestaurantList.postValue(nullableList)
                 Log.e(TAG, "restaurant list ${nullableList?.size}")
             }

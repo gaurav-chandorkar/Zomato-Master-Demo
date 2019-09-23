@@ -6,7 +6,6 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -34,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 this, android.Manifest.permission
                     .ACCESS_FINE_LOCATION
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun goToNext() {
+    /*private fun goToNext() {
         Handler().postDelayed(object : Runnable {
             override fun run() {
                 if (isLocationSet)
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }, 2000)
-    }
+    }*/
 
     private fun callHomeScreen() {
         startActivity(Intent(this@MainActivity, HomeScreenActivity::class.java))
@@ -76,10 +76,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onLocationResult(locationResult: LocationResult?) {
                 location = locationResult!!.locations.get(locationResult!!.locations.size - 1)
-                Log.e(
-                    "lattitude",
-                    location.latitude.toString() + "  " + location.longitude.toString()
-                )
 
                 NetworkConstant.lattitude = location.latitude.toString()
                 NetworkConstant.longitude = location.longitude.toString()

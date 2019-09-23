@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 import com.grv.gauravtest.app.RestaurantApplication
 import com.grv.gauravtest.viewmodel.HomeViewModel
 import com.grv.gauravtest.viewmodel.factory.HomeViewModelFactory
@@ -22,18 +23,18 @@ class HomeScreenActivity : AppCompatActivity(),TouchActionDelegates {
     lateinit var contentView: HomeScreenView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // setContentView(R.layout.activity_home_screen)
-        viewmodelProvideFactory = HomeViewModelFactory(application as RestaurantApplication)
         Log.e(TAG, "oncreate")
-        homeViewoMdel = ViewModelProviders.of(this@HomeScreenActivity, viewmodelProvideFactory)
-            .get(HomeViewModel::class.java)
-        observeLiveData()
+
         contentView =
             LayoutInflater.from(this).inflate(R.layout.activity_home_screen, null) as HomeScreenView
 
-
         setContentView(contentView)
         contentView.initView(this@HomeScreenActivity)
+
+        viewmodelProvideFactory = HomeViewModelFactory(application as RestaurantApplication)
+        homeViewoMdel = ViewModelProviders.of(this@HomeScreenActivity, viewmodelProvideFactory)
+            .get(HomeViewModel::class.java)
+        observeLiveData()
 
     }
 
@@ -43,6 +44,7 @@ class HomeScreenActivity : AppCompatActivity(),TouchActionDelegates {
             object : Observer<MutableList<RestaurantEntity>> {
                 override fun onChanged(response: MutableList<RestaurantEntity>) {
                     contentView.closeProgress()
+
                     if (response == null) {
                         return
                     }
@@ -57,7 +59,7 @@ class HomeScreenActivity : AppCompatActivity(),TouchActionDelegates {
     }
 
     override fun onItemClick(value: String) {
-        Log.e(TAG,"onItemClick")
+         Snackbar.make(contentView,value,Snackbar.LENGTH_SHORT).show()
     }
 }
 
